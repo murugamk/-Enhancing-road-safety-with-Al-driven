@@ -1,0 +1,48 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report
+
+# Step 1: Load the dataset
+# Replace 'accidents.csv' with your real dataset
+df = pd.read_csv('accidents.csv')
+
+# Step 2: Basic overview
+print(df.head())
+print(df.info())
+
+# Step 3: Data cleaning (dropping missing values for simplicity)
+df = df.dropna()
+
+# Step 4: Feature engineering
+# Convert 'Time' to hour if present
+if 'Time' in df.columns:
+    df['Hour'] = pd.to_datetime(df['Time']).dt.hour
+
+# Step 5: Data visualization
+plt.figure(figsize=(10, 5))
+sns.countplot(data=df, x='Severity')
+plt.title('Accident Severity Distribution')
+plt.show()
+
+# Optional: Correlation heatmap
+plt.figure(figsize=(10, 5))
+sns.heatmap(df.corr(), annot=True, cmap='coolwarm')
+plt.title('Feature Correlation')
+plt.show()
+
+# Step 6: Predicting Accident Severity (as example target)
+# Select features and target (adjust based on your dataset)
+features = ['Hour', 'Weather_Condition', 'Visibility(mi)', 'Temperature(F)']
+target = 'Severity'
+
+# Convert categorical to numeric
+df = pd.get_dummies(df, columns=['Weather_Condition'], drop_first=True)
+
+X = df[features]
+y = df[target]
+
+# Step 7: Split and train model
+X_train, X_test, y_train, y_test = train_test_split(X, y
